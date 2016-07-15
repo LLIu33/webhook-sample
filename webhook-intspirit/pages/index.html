@@ -1,0 +1,75 @@
+{# ------------------------------------------------------- #}
+
+{# YOUR HOMEPAGE #}
+
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+
+{# ------------------------------------------------------- #}
+
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+
+{# This sets our page <title>. It will append "- Homepage" to the site title defined in base. #}
+{% block title %}{% parent %} - Homepage{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-12">
+        <h2>{{cms.contactinfo.name}}</h2>
+        <div class="row text-center">
+          <div class="col-sm-3 col-xs-6 first-box">
+            <h1><span class="glyphicon glyphicon-earphone"></span></h1>
+            <h3>Phone</h3>
+            <p>{{ cms.contactinfo.phone_number }}</p><br>
+          </div>
+          <div class="col-sm-3 col-xs-6 second-box">
+            <h1><span class="glyphicon glyphicon-home"></span></h1>
+            <h3>Location</h3>
+            <p>Latitude: {{ cms.contactinfo.geolocation.latitude }}</p>
+            <p>Longitude: {{ cms.contactinfo.geolocation.longitude }}</p><br>
+          </div>
+          <div class="col-sm-3 col-xs-6 third-box">
+            <h1><span class="glyphicon glyphicon-send"></span></h1>
+            <h3>E-mail</h3>
+            <p>{{ cms.contactinfo.email }}</p><br>
+          </div>
+          <div class="col-sm-3 col-xs-6 fourth-box">
+            <h1><span class="glyphicon glyphicon-leaf"></span></h1>
+            <h3>Web</h3>
+            <p>{{ cms.contactinfo.website }}</p><br>
+          </div>
+          {% if cms.contactinfo.geolocation %}
+            <div class="col-md-12">
+              <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ cms.contactinfo.geolocation.latitude }},{{ cms.contactinfo.geolocation.longitude }}&zoom=8&size=400x400&markers=color:red%7C{{ cms.contactinfo.geolocation.latitude }},{{ cms.contactinfo.geolocation.longitude }}" />
+            </div>
+        {% endif %}
+        </div>
+      <hr/>
+
+      <p>This is your homepage 12345 homepage, located at /pages/index.html.</p>
+
+      <p><a href="/cms/" class="btn btn-primary">Looking for the CMS?</a></p>
+
+      {# If you have at least content page type, we show a list. #}
+      {% if cms_types|size !== 0 %}
+
+        <h3>Content types you've created in the CMS so far.</h3>
+
+        <ul>
+        {% for type in cms_types %}
+          <li><a href="{{ url(type) }}">{{ type.name }}</a></li>
+        {% endfor %}
+        </ul>
+
+      {% endif %}
+
+    </div>
+  </div>
+
+{% endblock %}
